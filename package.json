@@ -1,0 +1,22 @@
+{
+  "name": "parcel-plugin-service-worker-manifest",
+  "version": "0.1.0",
+  "description": "Parcel plugin that injects a service worker friendly manifest into service worker implementations.",
+  "repository": "https://github.com/nevir/parcel-plugin-service-worker-manifest",
+  "license": "Apache-2.0",
+  "files": [
+    "*.md",
+    "src/**/*.{js,js.map,d.ts,d.ts.map}"
+  ],
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "peerDependencies": {
+    "parcel-bundler": "^1.0.0"
+  },
+  "dependencies": {
+    "tslib": "^1.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.3333"
+  }
+}

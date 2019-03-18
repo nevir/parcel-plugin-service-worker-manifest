@@ -1,0 +1,28 @@
+{
+  // Editor
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.rulers": [80, 110],
+
+  // Enables prettier
+  "editor.formatOnSave": true,
+
+  // Handled by prettier
+  "json.format.enable": false,
+
+  "eslint.autoFixOnSave": true,
+  "eslint.provideLintTask": true,
+
+  "files.exclude": {
+    "**/node_modules/": true,
+    // https://code.visualstudio.com/docs/languages/typescript#_hiding-derived-javascript-files
+    "**/*.js": { "when": "$(basename).ts" },
+    "**/**.js": { "when": "$(basename).tsx" },
+    // https://github.com/Microsoft/vscode/issues/1214#issuecomment-284363881
+    "**/*.js.map": true,
+    "**/*.d.ts.map": true,
+    "{bin,packages,scripts,src,test}/**/*.d.ts": true
+  },
+
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

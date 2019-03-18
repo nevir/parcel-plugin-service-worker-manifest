@@ -1,0 +1,14 @@
+# Generic
+*.log*
+.DS_Store
+
+# npm/yarn
+node_modules/
+
+# typescript
+*.js
+*.js.map
+*.d.ts
+*.d.ts.map
+!/*.js
+!/typings/**/*.d.ts

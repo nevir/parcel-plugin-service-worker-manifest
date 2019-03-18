@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "inlineSourceMap": true,
+    "lib": ["es2016", "es2017", "es2018", "esnext.bigint", "esnext.intl", "esnext.asynciterable", "dom"],
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "target": "es5",
+    "newLine": "lf",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true
+  }
+}
