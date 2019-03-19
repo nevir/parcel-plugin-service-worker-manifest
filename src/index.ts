@@ -12,7 +12,7 @@ export = function serviceWorkerManifestPlugin(bundler: any) {
       const contents = fs.readFileSync(bundle.name, { encoding: 'utf-8' });
       if (!contents.includes('__precacheManifest')) return;
 
-      injectManifest(bundle.name, contents, manifest);
+      injectManifest(bundler, bundle.name, contents, manifest);
     });
   });
 };
@@ -24,15 +24,19 @@ function visitBundles(bundle: any, callback: (bundle: any) => void) {
   }
 }
 
-function buildManifest(bundler: any, mainBundle: any) {
+function bundleUrl(bundler: any, bundlePath: string) {
   const { outDir, publicURL } = bundler.options;
+  return publicURL + path.relative(outDir, bundlePath);
+}
+
+function buildManifest(bundler: any, mainBundle: any) {
   const manifest: Manifest = [];
 
   visitBundles(mainBundle, bundle => {
     if (bundle.type === 'map') return;
 
     manifest.push({
-      url: publicURL + path.relative(outDir, bundle.name),
+      url: bundleUrl(bundler, bundle.name),
       revision: bundle.getHash()
     });
   });
@@ -40,7 +44,10 @@ function buildManifest(bundler: any, mainBundle: any) {
   return manifest;
 }
 
-function injectManifest(bundlePath: string, contents: string, manifest: Manifest) {
+function injectManifest(bundler: any, bundlePath: string, contents: string, fullManifest: Manifest) {
+  const url = bundleUrl(bundler, bundlePath);
+  const manifest = fullManifest.filter(m => m.url !== url);
+
   const manifestSource = `\n;this.__precacheManifest = ${JSON.stringify(manifest)};`;
 
   // Inject on last line, or right before a source mapping directive.
