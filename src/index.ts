@@ -27,8 +27,6 @@ export = function serviceWorkerManifestPlugin(bundler: any) {
       }
 
       fs.writeFileSync(bundle.name, contents);
-
-      console.log(bundle.name);
     });
   });
 };
