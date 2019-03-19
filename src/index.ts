@@ -1,32 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// TODO: Allow customization, roughly following:
-// https://developers.google.com/web/tools/workbox/modules/workbox-build#injectmanifest_mode
-// const defaultOptions = {
-//   globIgnores: ['**/*.{map}'],
-//   globPatterns: ['**/*']
-// };
+type Manifest = { url: string; revision: string }[];
 
 export = function serviceWorkerManifestPlugin(bundler: any) {
   bundler.on('bundled', (mainBundle: any) => {
     const manifest = buildManifest(bundler, mainBundle);
-    const manifestSource = `\n;this.__precacheManifest = ${JSON.stringify(manifest)};`;
 
     visitBundles(mainBundle, bundle => {
       if (bundle.type !== 'js') return;
-      let contents = fs.readFileSync(bundle.name, { encoding: 'utf-8' });
+      const contents = fs.readFileSync(bundle.name, { encoding: 'utf-8' });
       if (!contents.includes('__precacheManifest')) return;
 
-      // Inject on last line, or right before a source mapping directive.
-      const index = contents.lastIndexOf('\n//# ');
-      if (index >= 0) {
-        contents = contents.slice(0, index) + manifestSource + contents.slice(index);
-      } else {
-        contents += manifestSource;
-      }
-
-      fs.writeFileSync(bundle.name, contents);
+      injectManifest(bundle.name, contents, manifest);
     });
   });
 };
@@ -40,7 +26,7 @@ function visitBundles(bundle: any, callback: (bundle: any) => void) {
 
 function buildManifest(bundler: any, mainBundle: any) {
   const { outDir, publicURL } = bundler.options;
-  const manifest = [] as { url: string; revision: string }[];
+  const manifest: Manifest = [];
 
   visitBundles(mainBundle, bundle => {
     if (bundle.type === 'map') return;
@@ -52,4 +38,18 @@ function buildManifest(bundler: any, mainBundle: any) {
   });
 
   return manifest;
+}
+
+function injectManifest(bundlePath: string, contents: string, manifest: Manifest) {
+  const manifestSource = `\n;this.__precacheManifest = ${JSON.stringify(manifest)};`;
+
+  // Inject on last line, or right before a source mapping directive.
+  const index = contents.lastIndexOf('\n//# ');
+  if (index >= 0) {
+    contents = contents.slice(0, index) + manifestSource + contents.slice(index);
+  } else {
+    contents += manifestSource;
+  }
+
+  fs.writeFileSync(bundlePath, contents);
 }
