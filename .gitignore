@@ -12,3 +12,4 @@ node_modules/
 *.d.ts.map
 !/*.js
 !/typings/**/*.d.ts
+!/ambient.d.ts
